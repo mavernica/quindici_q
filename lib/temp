@@ -1,0 +1,143 @@
+Categorie
+
+Sport
+#2E86C1
+https://radioparlamentare.it/wp-content/uploads/2020/06/castellanza-sport-re-notte.jpg
+
+Cinema
+#C0392B
+https://www.cinematografo.it/wp-content/uploads/2020/12/cinema-700x430.png
+
+Storia
+#873600
+https://www.skuola.net/news_foto/2018/datazione-storia-contemporanea.jpg
+
+
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:tquestiona/LoadingIndicator.dart';
+import 'package:tquestiona/trasparent_appbar.dart';
+import 'dart:math' as math;
+
+
+import 'CategoryClass.dart';
+import 'GetColorFromHex.dart';
+
+List<String> urlTemp = [];
+
+class PlayPage extends StatefulWidget {
+  const PlayPage(this.title, {super.key});
+  final String title;
+
+  @override
+  _PlayPageState createState() => _PlayPageState();
+}
+
+class _PlayPageState extends State<PlayPage> with TickerProviderStateMixin {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  late AnimationController mycontroller;
+
+  @override
+  void initState() {
+    mycontroller = AnimationController(vsync: this)
+      ..addListener(() {
+        setState(() {});
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    mycontroller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: const TransparentAppBar(),
+        backgroundColor: Colors.cyan,
+        body: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Stack(children: [
+              FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  future: firestore.collection("categories").get(),
+                  builder: (BuildContext context, querySnapshot) {
+                    if (querySnapshot.hasData) {
+                      final List<CategoryClass> docs = querySnapshot.data!.docs
+                          .map(
+                            (doc) => CategoryClass.fromMap(doc.data()),
+                          )
+                          .toList();
+
+                      if (kDebugMode) {
+                        var numerOfCategory = querySnapshot.data!.docs.length;
+                        print(
+                            "Data retrieved - Number of categories $numerOfCategory");
+                        for (var item in docs) {
+                          print("Category${item.title}");
+                          print("Color${item.color1}${item.color2}");
+                          print("Url${item.url}");
+                        }
+                      }
+                      return ListWheelScrollView.useDelegate(
+                          itemExtent: 200,
+                          diameterRatio: 2,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          childDelegate: ListWheelChildLoopingListDelegate(
+                              children: List<Widget>.generate(
+                                  docs.length,
+                                  (index) => Container(
+                                      alignment: Alignment.center,
+                                      margin: const EdgeInsets.only(
+                                          left: 20, right: 20),
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(20),
+                                        border: GradientBoxBorder(
+                                            gradient: LinearGradient(colors: [
+                                              Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                                              Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                                              Color((math.Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(1.0),
+                                            ]),
+                                            width: 15),
+                                      ),
+                                      child: Stack(children: [
+                                        Center(
+                                            child: ClipRRect(
+                                          child: CachedNetworkImage(
+                                            imageUrl: docs[index].url,
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height,
+                                            fit: BoxFit.cover,
+                                          ),
+                                        )),
+                                        Center(
+                                            child: Text(
+                                          docs[index].title,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 50,
+                                          ),
+                                        ))
+                                      ])))));
+                    } else {
+                      return const Center(
+                          child: CircularProgressIndicator(
+                              backgroundColor: Colors.red, strokeWidth: 8));
+                    }
+                  })
+            ])));
+  }
+}
