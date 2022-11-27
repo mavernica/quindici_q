@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "1062598437952",
+    "firebase_url": "https://question-android12-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "question-android12",
+    "storage_bucket": "question-android12.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062598437952:android:453cecb0c39c031f6b83a5",
+        "android_client_info": {
+          "package_name": "com.example.quindiciq"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1062598437952-2bff02krqupuppeg4m8r09gtmv9b673o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq6Gvo1n0NE9sgem0HSoal-kFX0wdp0e0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1062598437952-2bff02krqupuppeg4m8r09gtmv9b673o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1062598437952-91apdgntc8cgg0nsuof0c4tdma86uv2k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.quindiciq"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1062598437952:android:88df0e5551b4ef9f6b83a5",
+        "android_client_info": {
+          "package_name": "com.example.tquestiona"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1062598437952-2bff02krqupuppeg4m8r09gtmv9b673o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDq6Gvo1n0NE9sgem0HSoal-kFX0wdp0e0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1062598437952-2bff02krqupuppeg4m8r09gtmv9b673o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1062598437952-91apdgntc8cgg0nsuof0c4tdma86uv2k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.quindiciq"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
