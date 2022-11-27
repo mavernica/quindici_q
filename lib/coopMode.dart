@@ -54,7 +54,7 @@ class _CoopModeState extends State<CoopMode> {
             builder: (BuildContext context, querySnapshot) {
               if (querySnapshot.hasError) {
                 if (kDebugMode) {
-                  print("Something went wrong in fetch data from DB");
+                  print("Something went wrong in fetch data from DB...");
                 }
               }
 
