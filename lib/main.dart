@@ -1,12 +1,20 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:quindici_q/modeClass.dart';
+import 'package:quindici_q/operationOnDb.dart';
+import 'package:quindici_q/soloMenuPage.dart';
+import 'package:quindici_q/coopMenuPage.dart';
 import 'homePage.dart';
+import 'instructionCoopPage.dart';
+import 'instructionSoloPage.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -19,18 +27,25 @@ class MyApp extends StatelessWidget {
             print("Error");
             print(snapshot.error);
           }
-          else {
-            List<FirebaseApp> apps = Firebase.apps;
-            apps.forEach((app) {
-              print('App name: ${app.name}');
-            });
-          }
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
+            OperationOnDb action = OperationOnDb();
+
+
             return MaterialApp(
               title: 'Flutter Demo',
-              home: HomePage(),
+              initialRoute: '/',
+              routes: {
+                // When navigating to the "/" route, build the FirstScreen widget.
+                '/': (context) => const HomePage(),
+                // When navigating to the "/second" route, build the SecondScreen widget.
+                '/standard': (context) => CoopMenuPage(planetInfo: modeList[0]),
+                '/solo': (context) => SoloMenuPage(planetInfo: modeList[1]),
+                '/instructionSolo': (context) => InstructionSoloPage(),
+                '/instructionCoop': (context) => InstructionCoopPage(),
+
+              },
               theme: ThemeData(
                 primarySwatch: Colors.blue,
                 visualDensity: VisualDensity.adaptivePlatformDensity,

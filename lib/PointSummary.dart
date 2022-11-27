@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quindici_q/standardModeClass.dart';
+import 'package:quindici_q/coopModeClass.dart';
 import 'package:wave/config.dart';
 import 'package:wave/wave.dart';
 

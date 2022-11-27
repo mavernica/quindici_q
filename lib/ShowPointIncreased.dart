@@ -1,7 +1,7 @@
 import 'package:countup/countup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quindici_q/standardModeClass.dart';
+import 'package:quindici_q/coopModeClass.dart';
 
 void showPointIncreased(BuildContext context, List<Team> teams) {
   showDialog(

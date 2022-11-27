@@ -6,14 +6,16 @@ import 'categoryPage.dart';
 import 'homePageBackground.dart';
 import 'myAppBar.dart';
 import 'myDrawer.dart';
-import 'data.dart';
+import 'modeClass.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +49,7 @@ class _HomePageState extends State<HomePage> {
                   height: 400, //dimensione del container che ospita le card
                   child: Swiper(
                     scrollDirection: Axis.horizontal,
-                    itemCount: planets.length,
+                    itemCount: modeList.length,
                     itemWidth: MediaQuery.of(context).size.width - 4 * 24,
                     layout: SwiperLayout.STACK,
                     pagination: const SwiperPagination(
@@ -61,7 +63,7 @@ class _HomePageState extends State<HomePage> {
                             context,
                             PageRouteBuilder(
                               pageBuilder: (context, a, b) => CategoryPage(
-                                planetInfo: planets[index],
+                                cardInfo: modeList[index],
                                 key: null,
                               ),
                             ),
@@ -89,12 +91,12 @@ class _HomePageState extends State<HomePage> {
                                         const SizedBox(
                                             height: 60), //altezza Card
                                         Text(
-                                          planets[index].name,
+                                          modeList[index].name,
                                           style: categoriesTitleTextStyle,
                                           textAlign: TextAlign.left,
                                         ),
                                         Text(
-                                          planets[index].subName,
+                                          modeList[index].subName,
                                           style: categorySubTitleStyle,
                                           textAlign: TextAlign.left,
                                         ),
@@ -106,9 +108,9 @@ class _HomePageState extends State<HomePage> {
                               ],
                             ),
                             Hero(
-                              tag: planets[index].position,
+                              tag: modeList[index].position,
                               child: Image.asset(
-                                planets[index].iconImage,
+                                modeList[index].iconImage,
                                 height: 210,
                                 width: 250,
                               ),
@@ -117,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                               right: 30,
                               bottom: 50,
                               child: Text(
-                                planets[index].position.toString(),
+                                modeList[index].position.toString(),
                                 style: bigNumberTextStyle,
                                 textAlign: TextAlign.left,
                               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quindici_q/standardModeClass.dart';
+import 'package:quindici_q/coopModeClass.dart';
 
 class ButtonGenerator extends StatefulWidget {
 
@@ -35,7 +35,7 @@ class _ButtonGeneratorState extends State<ButtonGenerator> {
         ),
         alignment: Alignment.center,
         child: Text(
-            widget.sq.questions[widget.index],
+            widget.sq.indizi[widget.index],
           style: pressed
               ? const TextStyle(color: Colors.blueAccent)
               : const TextStyle(color: Colors.red),

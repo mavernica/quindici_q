@@ -1,15 +1,15 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:quindici_q/startGamePage.dart';
+import 'package:quindici_q/coopMenuPage.dart';
 import 'package:quindici_q/styleguide.dart';
-import 'data.dart';
+import 'modeClass.dart';
 import 'homePageBackground.dart';
 import 'myAppBar.dart';
 
 class CategoryPage extends StatelessWidget {
-  final PlanetInfo planetInfo;
+  final Mode cardInfo;
 
-  const CategoryPage({super.key, required this.planetInfo});
+  const CategoryPage({super.key, required this.cardInfo});
 
   @override
   Widget build(BuildContext context) {
@@ -29,32 +29,24 @@ class CategoryPage extends StatelessWidget {
                 children: <Widget>[
                   const SizedBox(height: 260),
                   Text(
-                    planetInfo.name,
+                    cardInfo.name,
                     style: categoryTitleStyle,
                     textAlign: TextAlign.left,
                   ),
                   Text(
-                    planetInfo.subName,
+                    cardInfo.subName,
                     style: categorySubTitleStyle,
                     textAlign: TextAlign.left,
                   ),
                   Text(
-                    planetInfo.description ?? '',
+                    cardInfo.description ?? '',
                     maxLines: 5,
                     overflow: TextOverflow.ellipsis,
                     style: categoryTextStyle
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder: (context, a, b) => StartGamePage(
-                            planetInfo: planetInfo,
-                            key: null,
-                          ),
-                        ),
-                      );
+                      Navigator.pushNamed(context, cardInfo.page);
                     },
                     child: Card(
                       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -85,15 +77,7 @@ class CategoryPage extends StatelessWidget {
                               isRepeatingAnimation: true,
                               totalRepeatCount: 2,
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    pageBuilder: (context, a, b) => StartGamePage(
-                                      planetInfo: planetInfo,
-                                      key: null,
-                                    ),
-                                  ),
-                                );
+                                Navigator.pushNamed(context, cardInfo.page);
                               }),
                         ),
                       ),
@@ -115,7 +99,9 @@ class CategoryPage extends StatelessWidget {
                     ),
                     child: InkWell(
                       borderRadius: BorderRadius.circular(8),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pushNamed(context, cardInfo.instruction);
+                      },
                       child: Container(
                         alignment: Alignment.center,
                         margin: const EdgeInsets.symmetric(vertical: 10),
@@ -133,14 +119,14 @@ class CategoryPage extends StatelessWidget {
             Positioned(
               right: -64,
               child: Hero(
-                  tag: planetInfo.position,
-                  child: Image.asset(planetInfo.iconImage)),
+                  tag: cardInfo.position,
+                  child: Image.asset(cardInfo.iconImage)),
             ),
             Positioned(
               top: 50,
               left: 32,
               child: Text(
-                planetInfo.position.toString(),
+                cardInfo.position.toString(),
                 style: TextStyle(
                   fontFamily: 'Avenir',
                   fontSize: 247,

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:quindici_q/standardMod.dart';
+import 'package:quindici_q/coopMode.dart';
 
 import 'constants.dart';
 import 'myAppBar.dart';
@@ -169,7 +169,7 @@ class _ChooseTeamsState extends State<ChooseTeams> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => StandardMod(
+                                builder: (context) => CoopMode(
                                   team1: (controllerFirstTextField.text != '')
                                       ? controllerFirstTextField.text
                                       : "team1",
