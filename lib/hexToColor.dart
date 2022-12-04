@@ -2,7 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 
-Color GetColorFromHex(String hexColor) {
+Color hexToColor(String hexColor) {
   hexColor = hexColor.replaceAll("#", "");
   if (hexColor.length == 6) {
     hexColor = "FF$hexColor";

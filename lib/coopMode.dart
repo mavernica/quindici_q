@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quindici_q/filterView.dart';
-import 'package:quindici_q/questionGenerator.dart';
+import 'package:quindici_q/buttonGeneratorCoop.dart';
 import 'package:quindici_q/coopModeClass.dart';
 import 'pointSummary.dart';
 import 'showPointIncreased.dart';
@@ -130,7 +130,7 @@ class _CoopModeState extends State<CoopMode> {
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         //primo bottone
-                        return ButtonGenerator(singleQuestion,
+                        return ButtonGeneratorCoop(singleQuestion,
                             index); //15 domande e passo indice per segnare quelle scelte
                       },
                     ),

@@ -2,18 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:quindici_q/coopModeClass.dart';
 
-class ButtonGenerator extends StatefulWidget {
+class ButtonGeneratorCoop extends StatefulWidget {
 
   Question sq;
   int index;
 
-  ButtonGenerator(this.sq, this.index, {Key? key}) : super(key: key);
+  ButtonGeneratorCoop(this.sq, this.index, {Key? key}) : super(key: key);
 
   @override
-  _ButtonGeneratorState createState() => _ButtonGeneratorState();
+  _ButtonGeneratorCoopState createState() => _ButtonGeneratorCoopState();
 }
 
-class _ButtonGeneratorState extends State<ButtonGenerator> {
+class _ButtonGeneratorCoopState extends State<ButtonGeneratorCoop> {
   bool pressed = false;
 
   @override

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class GlobalView {
+
   static Future<int?> displayDialogSelectWordWithCallBack(
       BuildContext context, List<String> words) async {
+
     return await showDialog<int>(
       context: context,
       builder: (BuildContext context) {
