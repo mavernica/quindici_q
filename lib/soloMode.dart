@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quindici_q/coopModeClass.dart';
+import 'package:quindici_q/soloModelClass.dart';
 import 'package:quindici_q/textFieldContainer.dart';
 import 'ButtonGeneratorSolo.dart';
 import 'constants.dart';
 import 'myAppBar.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 
 class SoloMode extends StatefulWidget {
   const SoloMode({super.key});
@@ -17,20 +19,22 @@ class SoloMode extends StatefulWidget {
 }
 
 class _SoloModeState extends State<SoloMode> {
-  Random random = new Random();
+  Random random = Random();
   TextEditingController controllerText = TextEditingController();
 
-  List<Question> questionsGetFromDb = [];
+  List<SoloQuestion> questionsGetFromDb = [];
 
-  late Question actualQuestion; //elemento che viene visualizzato
+  late SoloQuestion actualQuestion; //elemento che viene visualizzato
   List<String> listOfClue = []; //lista di indizi
+
   int clueIndex =
       0; //contiene indizi già visualizzati per escluderli quando vengono aggiunti
 
   PageController? controller;
 
   late Timer timer;
-  int timeRemaining = 10;
+  int timeRemaining = 60;
+  bool menuIsOpen = false;
 
   @override
   void initState() {
@@ -64,7 +68,7 @@ class _SoloModeState extends State<SoloMode> {
           appBar: const MyAppBar(),
           body: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
               future: FirebaseFirestore.instance
-                  .collection("question")
+                  .collection("questionSolo")
                   .limit(3)
                   .get(),
               builder: (BuildContext context, querySnapshot) {
@@ -84,7 +88,7 @@ class _SoloModeState extends State<SoloMode> {
                     }
                     questionsGetFromDb = querySnapshot.data!.docs
                         .map(
-                          (doc) => Question.fromMap(doc.data()),
+                          (doc) => SoloQuestion.fromMap(doc.data()),
                         )
                         .toList();
 
@@ -191,18 +195,17 @@ class _SoloModeState extends State<SoloMode> {
             color: const Color(0xffff8906),
             child: InkWell(
               onTap: () {
+                menuIsOpen = true;
                 showModalBottomSheet(
                     context: context,
                     isScrollControlled: true,
-                    backgroundColor: Colors.greenAccent,
                     elevation: 10,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     builder: (BuildContext context) {
                       return textFieldContainer(context, controllerText);
-                    }
-                    ).then((value) => checkResponde());
+                    }).then((value) => checkResponse());
               },
               child: const SizedBox(
                 height: kToolbarHeight, //altezza bottone in bassi
@@ -225,13 +228,17 @@ class _SoloModeState extends State<SoloMode> {
 
   void startTimer() {
     const oneSec = Duration(seconds: 1);
+    timeRemaining = 60;
     timer = Timer.periodic(
       oneSec,
       (Timer timer) {
         if (timeRemaining == 0) {
           setState(() {
             timer.cancel();
-            openMenuNotClosable();
+            if (menuIsOpen) {
+              //Navigator.pop(context);
+            }
+            //openMenuNotClosable();
           });
         } else {
           setState(() {
@@ -240,6 +247,11 @@ class _SoloModeState extends State<SoloMode> {
         }
       },
     );
+  }
+
+  cancelTimer() {
+    timer.cancel();
+    timeRemaining = 0;
   }
 
   Widget circleTimer() {
@@ -260,16 +272,12 @@ class _SoloModeState extends State<SoloMode> {
         )));
   }
 
-
   Future openMenuNotClosable() {
     return showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         isDismissible: false,
         enableDrag: false,
-        // color is applied to main screen when modal bottom screen is displayed
-        //background color for modal bottom screen
-        backgroundColor: Colors.greenAccent,
         //elevates modal bottom screen
         elevation: 10,
         // gives rounded corner to modal bottom screen
@@ -278,10 +286,100 @@ class _SoloModeState extends State<SoloMode> {
         ),
         builder: (BuildContext context) {
           return textFieldContainer(context, controllerText);
-        }).then((value) => checkResponde());
+        }).then((value) => checkResponse());
   }
 
-  checkResponde() {
+  /// Se il BottomSheet è stato chiuso è paerchè l'utente può aver voluto visualizzare bene gli indizi
+  /// o aver inserito una risposta. Per controllare ciò bisogna effettuare un controllo sul valore del controller.
+  checkResponse() {
+    if (controllerText.text.isEmpty) {
+      menuIsOpen = false;
+    } else {
+      cancelTimer();
+      if (controllerText.text == actualQuestion.nome || actualQuestion.risposteEsatte.contains(controllerText.text)) {
+        userWin();
+      } else {
+        userLoseRound();
+      }
+    }
+  }
 
+  userWin() {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      animType: AnimType.rightSlide,
+      title: actualQuestion.nome + ' indovinata!',
+      desc: 'Allora sei un fuoriclasso',
+      btnOkOnPress: () {},
+    ).show();
+  }
+
+  userLoseRound() {
+    AwesomeDialog(
+      dismissOnTouchOutside: false,
+      dismissOnBackKeyPress: false,
+      context: context,
+      dialogType: DialogType.error,
+      animType: AnimType.rightSlide,
+      title: 'Hai sbagliato!',
+      desc: 'Ritenta, vedrai che andrà meglio...',
+      btnOkOnPress: () {
+        loadingBotResponse(context);
+      },
+    ).show();
+  }
+
+  loadingBotResponse(BuildContext context) async {
+    // show the loading dialog
+    showDialog(
+        barrierDismissible:
+            false, // The user CANNOT close this dialog  by pressing outsite it
+        context: context,
+        builder: (_) {
+          return WillPopScope( //gestione backButton
+            onWillPop: () async => false,
+            child: Dialog(
+              // The background color
+              backgroundColor: Colors.white,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    // The loading indicator
+                    CircularProgressIndicator(),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    // Some text
+                    Text('Il bot sta pensando...')
+                  ],
+                ),
+              ),
+            ),
+          );
+        });
+
+    await Future.delayed(const Duration(seconds: 3))
+        .then((value) => {Navigator.of(context).pop(), botDialog()});
+  }
+
+  botDialog() {
+    AwesomeDialog(
+      dismissOnTouchOutside: false,
+      dismissOnBackKeyPress: false,
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.rightSlide,
+      title: 'Il BOT dice ' + actualQuestion.risposteBot[clueIndex],
+      desc: 'Ma ha sbagliato, almeno hai escluso una parola ;D',
+      btnOkOnPress: () {
+        setState(() {
+          addNewClue();
+          startTimer();
+        });
+      },
+    ).show();
   }
 }

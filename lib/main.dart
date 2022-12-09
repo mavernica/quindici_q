@@ -1,7 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:quindici_q/modeClass.dart';
-import 'package:quindici_q/operationOnDb.dart';
+import 'package:quindici_q/operationOnDbCoop.dart';
+import 'package:quindici_q/operationOnDbSolo.dart';
 import 'package:quindici_q/soloMenuPage.dart';
 import 'package:quindici_q/coopMenuPage.dart';
 import 'homePage.dart';
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
         // Initialize FlutterFire
         future: Firebase.initializeApp(),
         builder: (context, snapshot) {
+
           // Check for errors
           if (snapshot.hasError) {
             print("Error");
@@ -30,8 +32,8 @@ class MyApp extends StatelessWidget {
 
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
-            OperationOnDb action = OperationOnDb();
 
+            OperationOnDbSolo action = OperationOnDbSolo();
 
             return MaterialApp(
               title: 'Flutter Demo',

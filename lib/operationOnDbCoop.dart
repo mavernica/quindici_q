@@ -4,22 +4,22 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 
-List<Post> transFromJson(String str) => List<Post>.from(
-    json.decode(str).map((x) => Post.fromJson(x)));
+List<PostCoop> transFromJsonCoop(String str) => List<PostCoop>.from(
+    json.decode(str).map((x) => PostCoop.fromJson(x)));
 
-String transToJson(List<Post> data) =>
+String transToJsonCoop(List<PostCoop> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
-class Post {
+class PostCoop {
    String nome;
    String categoria;
    String sottocategoria;
    List indizi;
    List risposte;
 
-  Post({required this.nome, required this.categoria, required this.sottocategoria, required this.indizi, required this.risposte});
+  PostCoop({required this.nome, required this.categoria, required this.sottocategoria, required this.indizi, required this.risposte});
 
-  factory Post.fromJson(Map<String, dynamic> json) => Post(
+  factory PostCoop.fromJson(Map<String, dynamic> json) => PostCoop(
         nome: json['nome'],
         categoria: json["categoria"],
         sottocategoria:json["sottocategoria"],
@@ -37,12 +37,12 @@ class Post {
   }
 
 
-class OperationOnDb{
+class OperationOnDbCoop{
   var db = FirebaseFirestore.instance.collection("question");
 
   Future<void> readJsonAndUpload() async {
     final String response = await rootBundle.loadString('assets/prova.json');
-    List<Post> listOfJson = transFromJson(response);
+    List<PostCoop> listOfJson = transFromJsonCoop(response);
 
     for (var e in listOfJson) {
       db.add({
@@ -69,4 +69,4 @@ class OperationOnDb{
     print("All element removed: ${snapshots.docs.length}");
   }
 
-  }
+ }
