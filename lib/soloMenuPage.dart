@@ -61,7 +61,7 @@ class SoloMenuPage extends StatelessWidget {
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
-                                  pageBuilder: (context, a, b) => SoloMode(),
+                                  pageBuilder: (context, a, b) => const SoloMode(),
                                 ),
                               );
                             },

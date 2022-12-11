@@ -5,7 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quindici_q/coopModeClass.dart';
 import 'package:quindici_q/soloModelClass.dart';
-import 'package:quindici_q/textFieldContainer.dart';
+import 'package:quindici_q/soloUserCanResponseDialog.dart';
+import 'package:quindici_q/soloUserMustResponseDialog.dart';
 import 'ButtonGeneratorSolo.dart';
 import 'constants.dart';
 import 'myAppBar.dart';
@@ -20,15 +21,13 @@ class SoloMode extends StatefulWidget {
 
 class _SoloModeState extends State<SoloMode> {
   Random random = Random();
-  TextEditingController controllerText = TextEditingController();
 
   List<SoloQuestion> questionsGetFromDb = [];
 
-  late SoloQuestion actualQuestion; //elemento che viene visualizzato
+  late SoloQuestion currentQuestion; //elemento che viene visualizzato
   List<String> listOfClue = []; //lista di indizi
 
-  int clueIndex =
-      0; //contiene indizi già visualizzati per escluderli quando vengono aggiunti
+  int clueIndex = 0; //contiene indizi già visualizzati per escluderli quando vengono aggiunti
 
   PageController? controller;
 
@@ -43,11 +42,15 @@ class _SoloModeState extends State<SoloMode> {
 
   void createNewQuestion() {
     //int randomNumber = random.nextInt(90) + 10; // from 10 upto 99 included
-    actualQuestion = questionsGetFromDb[1];
+    currentQuestion = questionsGetFromDb[1];
+    currentQuestion.risposteEsatte = currentQuestion.risposteEsatte
+        .map((word) => word.toLowerCase())
+        .toList();
+
   }
 
   void addNewClue() {
-    listOfClue.add(actualQuestion.indizi[clueIndex]);
+    listOfClue.add(currentQuestion.indizi[clueIndex]);
     clueIndex += 1;
   }
 
@@ -62,7 +65,7 @@ class _SoloModeState extends State<SoloMode> {
       ),
       Scaffold(
           backgroundColor: Colors.transparent,
-          bottomNavigationBar: ResultNavBar(context),
+          bottomNavigationBar: resultNavBar(context),
           extendBodyBehindAppBar: true,
           floatingActionButton: circleTimer(),
           appBar: const MyAppBar(),
@@ -102,7 +105,8 @@ class _SoloModeState extends State<SoloMode> {
                     backgroundColor: Colors.transparent,
                     content: Center(
                       child: Image.asset(
-                        'assets/pacman.gif', // Put your gif into the assets folder
+                        'assets/pacman.gif',
+                        // Put your gif into the assets folder
                         width: 100,
                       ),
                     ),
@@ -133,10 +137,11 @@ class _SoloModeState extends State<SoloMode> {
                   textAlign: TextAlign.left,
                 ),
                 const SizedBox(
-                  height: 40,
+                  height: 10,
                 ),
                 ListView.builder(
-                  padding: const EdgeInsets.all(0),
+                  padding: const EdgeInsets.only(
+                      bottom: kFloatingActionButtonMargin + 40),
                   //sennò aggiunge uno spazio in alto per qualche motivo
                   itemCount: listOfClue.length,
                   physics: const NeverScrollableScrollPhysics(),
@@ -151,7 +156,7 @@ class _SoloModeState extends State<SoloMode> {
             )));
   }
 
-  Widget ResultNavBar(BuildContext context) {
+  Widget resultNavBar(BuildContext context) {
     return Row(
       children: [
         Material(
@@ -171,7 +176,7 @@ class _SoloModeState extends State<SoloMode> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 builder: (BuildContext context) {
-                  return SizedBox();
+                  return const SizedBox();
                 },
               );
             },
@@ -204,8 +209,17 @@ class _SoloModeState extends State<SoloMode> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     builder: (BuildContext context) {
-                      return textFieldContainer(context, controllerText);
-                    }).then((value) => checkResponse());
+                      return soloUserCanResponseDialog(context);
+                    }).then((value) => {
+                      if (value == null)
+                        {
+                          menuIsOpen = false ///l'utente ha chiuso la finestra
+                        }
+                      else
+                        {
+                          checkResponse(value) ///ha passato o risposto
+                        }
+                    });
               },
               child: const SizedBox(
                 height: kToolbarHeight, //altezza bottone in bassi
@@ -229,6 +243,7 @@ class _SoloModeState extends State<SoloMode> {
   void startTimer() {
     const oneSec = Duration(seconds: 1);
     timeRemaining = 60;
+    menuIsOpen = false;
     timer = Timer.periodic(
       oneSec,
       (Timer timer) {
@@ -236,9 +251,9 @@ class _SoloModeState extends State<SoloMode> {
           setState(() {
             timer.cancel();
             if (menuIsOpen) {
-              //Navigator.pop(context);
+              Navigator.pop(context);
             }
-            //openMenuNotClosable();
+            openMenuNotClosable();
           });
         } else {
           setState(() {
@@ -285,22 +300,35 @@ class _SoloModeState extends State<SoloMode> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         builder: (BuildContext context) {
-          return textFieldContainer(context, controllerText);
-        }).then((value) => checkResponse());
+          return soloUserMustResponseDialog(context);
+        }).then((value) => {
+          if (value != null)
+            {
+              checkResponse(value)
+            }
+          else
+            {
+              loadingBotResponse(context)
+            }
+        });
   }
 
   /// Se il BottomSheet è stato chiuso è paerchè l'utente può aver voluto visualizzare bene gli indizi
   /// o aver inserito una risposta. Per controllare ciò bisogna effettuare un controllo sul valore del controller.
-  checkResponse() {
-    if (controllerText.text.isEmpty) {
-      menuIsOpen = false;
-    } else {
-      cancelTimer();
-      if (controllerText.text == actualQuestion.nome || actualQuestion.risposteEsatte.contains(controllerText.text)) {
+  checkResponse(var userWord) {
+    cancelTimer();
+    if (userWord != 'skipTurn') {
+      String userResponse = userWord.trim().toLowerCase();
+      String correctResponse = currentQuestion.nome.trim().toLowerCase();
+      if (userResponse == correctResponse ||
+          currentQuestion.risposteEsatte.contains(userResponse)) {
         userWin();
       } else {
         userLoseRound();
       }
+    }
+    else {
+      loadingBotResponse(context);
     }
   }
 
@@ -309,7 +337,7 @@ class _SoloModeState extends State<SoloMode> {
       context: context,
       dialogType: DialogType.success,
       animType: AnimType.rightSlide,
-      title: actualQuestion.nome + ' indovinata!',
+      title: currentQuestion.nome + ' indovinata!',
       desc: 'Allora sei un fuoriclasso',
       btnOkOnPress: () {},
     ).show();
@@ -331,13 +359,15 @@ class _SoloModeState extends State<SoloMode> {
   }
 
   loadingBotResponse(BuildContext context) async {
+    timer.cancel();
     // show the loading dialog
     showDialog(
         barrierDismissible:
             false, // The user CANNOT close this dialog  by pressing outsite it
         context: context,
         builder: (_) {
-          return WillPopScope( //gestione backButton
+          return WillPopScope(
+            //gestione backButton
             onWillPop: () async => false,
             child: Dialog(
               // The background color
@@ -372,7 +402,7 @@ class _SoloModeState extends State<SoloMode> {
       context: context,
       dialogType: DialogType.info,
       animType: AnimType.rightSlide,
-      title: 'Il BOT dice ' + actualQuestion.risposteBot[clueIndex],
+      title: 'Il BOT dice ' + currentQuestion.risposteBot[clueIndex],
       desc: 'Ma ha sbagliato, almeno hai escluso una parola ;D',
       btnOkOnPress: () {
         setState(() {

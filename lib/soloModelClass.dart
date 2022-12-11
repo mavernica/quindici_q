@@ -7,7 +7,6 @@ class SoloQuestion {
   late List<dynamic> risposteBot;
   late List<dynamic> risposteEsatte;
 
-
   SoloQuestion(
       {required this.nome,
         required this.categoria,

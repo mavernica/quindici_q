@@ -120,11 +120,10 @@ class _CoopModeState extends State<CoopMode> {
                       textAlign: TextAlign.left,
                     ),
                     const SizedBox(
-                      height: 40,
+                      height: 10,
                     ),
                     ListView.builder(
-                      padding: const EdgeInsets.all(
-                          0), //sennò aggiunge uno spazio in alto per qualche motivo
+                      padding: const EdgeInsets.only(bottom: kFloatingActionButtonMargin + 40),
                       itemCount: singleQuestion.indizi.length,
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
@@ -134,6 +133,7 @@ class _CoopModeState extends State<CoopMode> {
                             index); //15 domande e passo indice per segnare quelle scelte
                       },
                     ),
+
                   ],
                 ))));
   }
