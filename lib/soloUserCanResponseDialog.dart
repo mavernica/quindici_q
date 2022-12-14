@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:another_flushbar/flushbar.dart';
+
 
 Widget soloUserCanResponseDialog(BuildContext context) {
   TextEditingController controllerText = TextEditingController();
@@ -7,12 +9,24 @@ Widget soloUserCanResponseDialog(BuildContext context) {
       //obbligatorio se si vuole che la tastiera si alzi
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-      child: Container(
-          height: 180,
-          padding: const EdgeInsets.all(16.0),
-          color: Colors.white,
+      child: SizedBox(
+          height: 220,
           child: Column(children: <Widget>[
-            const SizedBox(height: 25),
+            const SizedBox(height: 10),
+            const Padding(padding: EdgeInsets.all(8),
+            child: Text(
+              "Inserisci la tua risposta. Il fatto che i caratteri siano in maiuscolo o minuscolo, non cambia; come non "
+                  "influisce la presenza di spazi all'inizio o alla fine della risposta.",
+              style: TextStyle(
+                fontFamily: 'ModernSans',
+                fontSize: 15,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            ),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 10.0),
               child: Material(
@@ -24,23 +38,18 @@ Widget soloUserCanResponseDialog(BuildContext context) {
                   obscureText: false,
                   autofocus: false,
                   decoration: InputDecoration(
-                      hintText: 'Prova a indovinare...',
+                      hintText: 'Inserisci la tua riposta...',
                       hintStyle:
-                          const TextStyle(fontSize: 16, color: Colors.black45),
+                          const TextStyle(
+                            fontFamily: 'ModernSans',
+                            fontSize: 20,
+                            color: Colors.black,
+                            fontWeight: FontWeight.w500,
+                          ),
                       fillColor: Colors.white,
                       filled: true,
                       prefixIcon:
                           const Icon(Icons.help, color: Colors.blueAccent),
-                      suffixIcon: const Material(
-                        elevation: 5.0,
-                        color: Colors.blueAccent,
-                        shadowColor: Colors.blueAccent,
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(15.0),
-                          bottomRight: Radius.circular(15.0),
-                        ),
-                        child: Icon(Icons.search, color: Colors.white),
-                      ),
                       contentPadding:
                           const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                       enabledBorder: OutlineInputBorder(
@@ -60,24 +69,49 @@ Widget soloUserCanResponseDialog(BuildContext context) {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       textStyle: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold)),
+                        fontFamily: 'ModernSans',
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                  ),
                   child: const Text('Verifica'),
                   onPressed: () {
                     if (controllerText.text.isNotEmpty) {
                       Navigator.pop(context, controllerText.text);
                     } else {
-                      Navigator.pop(context);
-                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text('Inserisci un nome...'),
-                      ));
+                      Flushbar(
+                        flushbarPosition: FlushbarPosition.TOP,
+                        isDismissible: true,
+                        messageText: const Text(
+                          "Sembra tu non abbia inserito alcuna risposta...",
+                          style: TextStyle(
+                            fontFamily: 'ModernSans',
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                        icon: Icon(
+                          Icons.info_outline,
+                          size: 28.0,
+                          color: Colors.blue[300],
+                        ),
+                        duration: const Duration(seconds: 2),
+                        leftBarIndicatorColor: Colors.blue[300],
+                      ).show(context);
                     }
                   },
                 ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
-                      textStyle: const TextStyle(
-                          fontSize: 15, fontWeight: FontWeight.bold)),
+                    textStyle: const TextStyle(
+                      fontFamily: 'ModernSans',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                   child: const Text('Passa'),
                   onPressed: () {
                     Navigator.pop(context, "skipTurn");

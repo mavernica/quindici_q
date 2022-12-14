@@ -42,7 +42,7 @@ class MyAppBarBack extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Colors.transparent,
       elevation: 0.0,
       iconTheme: const IconThemeData(
-        color: Colors.black, //change your color here
+        color: Colors.white, //change your color here
       ),
     );
   }

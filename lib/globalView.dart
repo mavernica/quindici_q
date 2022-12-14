@@ -11,7 +11,7 @@ class GlobalView {
         return AlertDialog(
           scrollable: true,
           title: const Text("ciao"),
-          content: Container(
+          content: SizedBox(
             height: 300.0, // Change as per your requirement
             width: 300.0,
             child: SingleChildScrollView(

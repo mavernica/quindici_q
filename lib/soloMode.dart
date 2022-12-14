@@ -5,12 +5,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quindici_q/coopModeClass.dart';
 import 'package:quindici_q/soloModelClass.dart';
+import 'package:quindici_q/soloUserAndBotResponses.dart';
 import 'package:quindici_q/soloUserCanResponseDialog.dart';
 import 'package:quindici_q/soloUserMustResponseDialog.dart';
 import 'ButtonGeneratorSolo.dart';
 import 'constants.dart';
 import 'myAppBar.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 class SoloMode extends StatefulWidget {
   const SoloMode({super.key});
@@ -21,13 +23,16 @@ class SoloMode extends StatefulWidget {
 
 class _SoloModeState extends State<SoloMode> {
   Random random = Random();
+  int botResponseIndex = 0;
 
   List<SoloQuestion> questionsGetFromDb = [];
 
   late SoloQuestion currentQuestion; //elemento che viene visualizzato
-  List<String> listOfClue = []; //lista di indizi
 
-  int clueIndex = 0; //contiene indizi già visualizzati per escluderli quando vengono aggiunti
+  late List<String> listOfClue; //lista di indizi in forma di stringa
+  late List<int> listOfClueIndex; //lista di indizi già presenti in forma di interi
+
+  late List<String> userResponses = []; //risposte utente
 
   PageController? controller;
 
@@ -41,17 +46,25 @@ class _SoloModeState extends State<SoloMode> {
   }
 
   void createNewQuestion() {
-    //int randomNumber = random.nextInt(90) + 10; // from 10 upto 99 included
+    print("Created new questins - ENTRO 1 SOLA VOLTA QUA");
     currentQuestion = questionsGetFromDb[1];
     currentQuestion.risposteEsatte = currentQuestion.risposteEsatte
         .map((word) => word.toLowerCase())
         .toList();
-
+    listOfClue = [];
+    listOfClueIndex = [];
+    userResponses = [];
   }
 
+  /// genera un nuovo indizio utilizzando un valore casuale compreso tra 0 e 20
   void addNewClue() {
-    listOfClue.add(currentQuestion.indizi[clueIndex]);
-    clueIndex += 1;
+    int randomNumber = random.nextInt(21) + 0; // from right to sum of them -1
+    while (listOfClueIndex.contains(randomNumber)) { //finchè il numero random è giù uscito ne generi uno nuovo
+      randomNumber = random.nextInt(20) + 0;
+    }
+    listOfClueIndex.add(randomNumber);
+    listOfClue.add(currentQuestion.indizi[randomNumber]);
+    print("Indizi mostrati$listOfClueIndex");
   }
 
   @override
@@ -68,7 +81,7 @@ class _SoloModeState extends State<SoloMode> {
           bottomNavigationBar: resultNavBar(context),
           extendBodyBehindAppBar: true,
           floatingActionButton: circleTimer(),
-          appBar: const MyAppBar(),
+          appBar: const MyAppBarBack(),
           body: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
               future: FirebaseFirestore.instance
                   .collection("questionSolo")
@@ -126,12 +139,12 @@ class _SoloModeState extends State<SoloMode> {
                     height:
                         50 //altezza dall'alto. Obbligatoria se incorporti il body dentro l'app bar
                     ),
-                Text(
+                const Text(
                   "???",
                   style: TextStyle(
-                    fontFamily: 'Avenir',
+                    fontFamily: 'ModernSans',
                     fontSize: 56,
-                    color: primaryTextColor,
+                    color: Colors.white,
                     fontWeight: FontWeight.w900,
                   ),
                   textAlign: TextAlign.left,
@@ -141,15 +154,20 @@ class _SoloModeState extends State<SoloMode> {
                 ),
                 ListView.builder(
                   padding: const EdgeInsets.only(
-                      bottom: kFloatingActionButtonMargin + 40),
+                      bottom: kFloatingActionButtonMargin + 70),
                   //sennò aggiunge uno spazio in alto per qualche motivo
                   itemCount: listOfClue.length,
                   physics: const NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemBuilder: (context, index) {
-                    //primo bottone
-                    return ButtonGeneratorSolo(listOfClue,
-                        index); //15 domande e passo indice per impostare l'indizio
+                    return AnimationConfiguration.staggeredList(
+                        position: index,
+                        duration: const Duration(milliseconds: 375),
+                        child: SlideAnimation(
+                            verticalOffset: 50.0,
+                            child: FadeInAnimation(
+                                child: ButtonGeneratorSolo(listOfClue,
+                                    index)))); //15 domande e passo indice per impostare l'indizio
                   },
                 ),
               ],
@@ -160,23 +178,20 @@ class _SoloModeState extends State<SoloMode> {
     return Row(
       children: [
         Material(
-          color: const Color(0xffff8989),
+          color: Colors.cyan,
           child: InkWell(
             onTap: () {
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
-                // color is applied to main screen when modal bottom screen is displayed
-                //background color for modal bottom screen
-                backgroundColor: Colors.blue,
-                //elevates modal bottom screen
                 elevation: 10,
-                // gives rounded corner to modal bottom screen
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+                shape: const RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.vertical(top: Radius.circular(25.0)),
                 ),
+                clipBehavior: Clip.antiAliasWithSaveLayer,
                 builder: (BuildContext context) {
-                  return const SizedBox();
+                  return soloUserAndBotResponses(context, userResponses, botResponseIndex, currentQuestion.risposteBot);
                 },
               );
             },
@@ -185,10 +200,13 @@ class _SoloModeState extends State<SoloMode> {
               width: 130,
               child: Center(
                 child: Text(
-                  'Rispondi',
+                  'Riepilogo',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontWeight: FontWeight.bold,
+                    fontFamily: 'ModernSans',
+                    fontSize: 20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
                   ),
                 ),
               ),
@@ -197,7 +215,7 @@ class _SoloModeState extends State<SoloMode> {
         ),
         Expanded(
           child: Material(
-            color: const Color(0xffff8906),
+            color: Colors.blueAccent,
             child: InkWell(
               onTap: () {
                 menuIsOpen = true;
@@ -205,19 +223,23 @@ class _SoloModeState extends State<SoloMode> {
                     context: context,
                     isScrollControlled: true,
                     elevation: 10,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.vertical(top: Radius.circular(25.0)),
                     ),
+                    clipBehavior: Clip.antiAliasWithSaveLayer,
                     builder: (BuildContext context) {
                       return soloUserCanResponseDialog(context);
                     }).then((value) => {
                       if (value == null)
                         {
-                          menuIsOpen = false ///l'utente ha chiuso la finestra
+                          menuIsOpen = false
+                          ///l'utente ha chiuso la finestra
                         }
                       else
                         {
-                          checkResponse(value) ///ha passato o risposto
+                          checkResponse(value)
+                          ///ha passato o risposto
                         }
                     });
               },
@@ -226,9 +248,12 @@ class _SoloModeState extends State<SoloMode> {
                 width: double.infinity,
                 child: Center(
                   child: Text(
-                    'Parola indovinata',
+                    'Prova a indovinare',
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontFamily: 'ModernSans',
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w800,
                     ),
                   ),
                 ),
@@ -282,7 +307,12 @@ class _SoloModeState extends State<SoloMode> {
           onPressed: () {},
           child: Text(
             timeRemaining.toString(),
-            style: const TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontFamily: 'ModernSans',
+              fontSize: 20,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         )));
   }
@@ -303,14 +333,11 @@ class _SoloModeState extends State<SoloMode> {
           return soloUserMustResponseDialog(context);
         }).then((value) => {
           if (value != null)
-            {
-              checkResponse(value)
-            }
+            {checkResponse(value)}
           else
             {
-              loadingBotResponse(context)
-            }
-        });
+              checkResponse('skipTurn')
+        }});
   }
 
   /// Se il BottomSheet è stato chiuso è paerchè l'utente può aver voluto visualizzare bene gli indizi
@@ -318,16 +345,17 @@ class _SoloModeState extends State<SoloMode> {
   checkResponse(var userWord) {
     cancelTimer();
     if (userWord != 'skipTurn') {
-      String userResponse = userWord.trim().toLowerCase();
+      userResponses.add(userWord);
+      String word = userWord.trim().toLowerCase();
       String correctResponse = currentQuestion.nome.trim().toLowerCase();
-      if (userResponse == correctResponse ||
-          currentQuestion.risposteEsatte.contains(userResponse)) {
+      if (word == correctResponse ||
+          currentQuestion.risposteEsatte.contains(word)) {
         userWin();
       } else {
         userLoseRound();
       }
-    }
-    else {
+    } else {
+      userResponses.add("...");
       loadingBotResponse(context);
     }
   }
@@ -337,7 +365,19 @@ class _SoloModeState extends State<SoloMode> {
       context: context,
       dialogType: DialogType.success,
       animType: AnimType.rightSlide,
-      title: currentQuestion.nome + ' indovinata!',
+      title: '${currentQuestion.nome} indovinata!',
+      titleTextStyle: const TextStyle(
+        fontFamily: 'ModernSans',
+        fontSize: 25,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      descTextStyle: const TextStyle(
+        fontFamily: 'ModernSans',
+        fontSize: 18,
+        color: Colors.black,
+        fontWeight: FontWeight.w500,
+      ),
       desc: 'Allora sei un fuoriclasso',
       btnOkOnPress: () {},
     ).show();
@@ -351,7 +391,19 @@ class _SoloModeState extends State<SoloMode> {
       dialogType: DialogType.error,
       animType: AnimType.rightSlide,
       title: 'Hai sbagliato!',
+      titleTextStyle: const TextStyle(
+        fontFamily: 'ModernSans',
+        fontSize: 25,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
       desc: 'Ritenta, vedrai che andrà meglio...',
+      descTextStyle: const TextStyle(
+        fontFamily: 'ModernSans',
+        fontSize: 18,
+        color: Colors.black,
+        fontWeight: FontWeight.w500,
+      ),
       btnOkOnPress: () {
         loadingBotResponse(context);
       },
@@ -370,20 +422,50 @@ class _SoloModeState extends State<SoloMode> {
             //gestione backButton
             onWillPop: () async => false,
             child: Dialog(
-              // The background color
+              shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0))),
               backgroundColor: Colors.white,
               child: Padding(
                 padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     // The loading indicator
-                    CircularProgressIndicator(),
-                    SizedBox(
+                    Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Image.network(
+                          // you can replace this with Image.asset
+                          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdNeK3yAIGX27DbmBkkqNm8RA6Lj9gldW0fA&usqp=CAU',
+                          fit: BoxFit.cover,
+                          height: 60,
+                          width: 60,
+                        ),
+                        const SizedBox(
+                          height: 80,
+                          width: 80,
+                          child: CircularProgressIndicator(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.orange),
+                            strokeWidth: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
                       height: 15,
                     ),
                     // Some text
-                    Text('Il bot sta pensando...')
+                    const Text(
+                      "Il BOT sta pensando...",
+                      style: TextStyle(
+                        fontFamily: 'ModernSans',
+                        fontSize: 15,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
               ),
@@ -391,7 +473,7 @@ class _SoloModeState extends State<SoloMode> {
           );
         });
 
-    await Future.delayed(const Duration(seconds: 3))
+    await Future.delayed(const Duration(seconds: 1))
         .then((value) => {Navigator.of(context).pop(), botDialog()});
   }
 
@@ -402,10 +484,23 @@ class _SoloModeState extends State<SoloMode> {
       context: context,
       dialogType: DialogType.info,
       animType: AnimType.rightSlide,
-      title: 'Il BOT dice ' + currentQuestion.risposteBot[clueIndex],
-      desc: 'Ma ha sbagliato, almeno hai escluso una parola ;D',
+      titleTextStyle: const TextStyle(
+        fontFamily: 'ModernSans',
+        fontSize: 25,
+        color: Colors.black,
+        fontWeight: FontWeight.bold,
+      ),
+      title: 'Il BOT dice ' + currentQuestion.risposteBot[botResponseIndex],
+      desc: 'Ma ha sbagliato, almeno hai escluso una parola',
+      descTextStyle: const TextStyle(
+        fontFamily: 'ModernSans',
+        fontSize: 18,
+        color: Colors.black,
+        fontWeight: FontWeight.w500,
+      ),
       btnOkOnPress: () {
         setState(() {
+          botResponseIndex += 1;
           addNewClue();
           startTimer();
         });

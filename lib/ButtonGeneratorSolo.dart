@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:quindici_q/coopModeClass.dart';
 
 class ButtonGeneratorSolo extends StatefulWidget {
-
   List<String> clues;
   int index;
 
@@ -14,10 +13,9 @@ class ButtonGeneratorSolo extends StatefulWidget {
 }
 
 class ButtonGeneratorSoloState extends State<ButtonGeneratorSolo> {
-
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
         margin: const EdgeInsets.all(8),
         height: 60,
         width: 400,
@@ -26,9 +24,17 @@ class ButtonGeneratorSoloState extends State<ButtonGeneratorSolo> {
           borderRadius: BorderRadius.circular(15),
         ),
         alignment: Alignment.center,
-        child: Text(
-          widget.clues[widget.index]
-        ),
-      );
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text(
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'ModernSans',
+                fontSize: 20,
+                color: Colors.black,
+                fontWeight: FontWeight.w500,
+              ),
+              widget.clues[widget.index]),
+        ));
   }
 }

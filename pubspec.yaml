@@ -66,6 +66,7 @@ dev_dependencies:
   awesome_dialog: ^3.0.2
   another_flushbar: ^1.12.29
   double_back_to_close: ^2.0.0
+  flutter_staggered_animations: ^1.0.0
 
 
 # For information on the generic Dart part of this file, see the
@@ -91,7 +92,10 @@ flutter:
     - assets/ch.png
     - assets/
     - assets/icons/
-
+  fonts:
+    - family: ModernSans
+      fonts:
+        - asset: fonts/ModernSans-Light.otf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
