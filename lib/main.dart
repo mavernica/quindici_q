@@ -33,8 +33,6 @@ class MyApp extends StatelessWidget {
           // Once complete, show your application
           if (snapshot.connectionState == ConnectionState.done) {
 
-            OperationOnDbSolo action = OperationOnDbSolo();
-
             return MaterialApp(
               title: 'Flutter Demo',
               initialRoute: '/',

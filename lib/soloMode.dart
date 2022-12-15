@@ -23,7 +23,7 @@ class SoloMode extends StatefulWidget {
 
 class _SoloModeState extends State<SoloMode> {
   Random random = Random();
-  int botResponseIndex = 0;
+  late int botResponseIndex;
 
   List<SoloQuestion> questionsGetFromDb = [];
 
@@ -46,8 +46,9 @@ class _SoloModeState extends State<SoloMode> {
   }
 
   void createNewQuestion() {
-    print("Created new questins - ENTRO 1 SOLA VOLTA QUA");
-    currentQuestion = questionsGetFromDb[1];
+    botResponseIndex = 0;
+    int randomQuestion= random.nextInt(29) + 0; // from right to sum of them -1
+    currentQuestion = questionsGetFromDb[randomQuestion];
     currentQuestion.risposteEsatte = currentQuestion.risposteEsatte
         .map((word) => word.toLowerCase())
         .toList();
@@ -58,7 +59,7 @@ class _SoloModeState extends State<SoloMode> {
 
   /// genera un nuovo indizio utilizzando un valore casuale compreso tra 0 e 20
   void addNewClue() {
-    int randomNumber = random.nextInt(21) + 0; // from right to sum of them -1
+    int randomNumber = random.nextInt(20) + 0; // from right to sum of them -1
     while (listOfClueIndex.contains(randomNumber)) { //finchè il numero random è giù uscito ne generi uno nuovo
       randomNumber = random.nextInt(20) + 0;
     }
@@ -85,7 +86,6 @@ class _SoloModeState extends State<SoloMode> {
           body: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
               future: FirebaseFirestore.instance
                   .collection("questionSolo")
-                  .limit(3)
                   .get(),
               builder: (BuildContext context, querySnapshot) {
                 if (questionsGetFromDb.isNotEmpty) {
@@ -379,7 +379,13 @@ class _SoloModeState extends State<SoloMode> {
         fontWeight: FontWeight.w500,
       ),
       desc: 'Allora sei un fuoriclasso',
-      btnOkOnPress: () {},
+      btnOkOnPress: () {
+        setState(() {
+          createNewQuestion();
+          addNewClue(); //aggiungo un nuovo indizio da visualizzare
+          startTimer(); //faccio partire il timer
+        });
+      },
     ).show();
   }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:quindici_q/operationOnDbSolo.dart';
 
 class MyDrawer extends StatelessWidget {
   @override
@@ -64,6 +65,18 @@ class MyDrawer extends StatelessWidget {
             title: Text('Exit'),
             leading: Icon(Icons.exit_to_app),
             onTap: () => null,
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Importa dati DB'),
+            leading: Icon(Icons.exit_to_app),
+            onTap: () => OperationOnDbSolo().readJsonAndUpload(),
+          ),
+          Divider(),
+          ListTile(
+            title: Text('Elimina DB'),
+            leading: Icon(Icons.exit_to_app),
+            onTap: () => OperationOnDbSolo().deleteAllData(),
           ),
         ],
       ),
