@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:double_back_to_close/double_back_to_close.dart';
 
-Widget soloUserMustResponseDialog(BuildContext context) {
-  TextEditingController controllerText = TextEditingController();
+Widget soloUserMustResponseDialog(BuildContext context, TextEditingController userMustResponseController) {
 
   return DoubleBack(
       waitForSecondBackPress: 15,
@@ -52,7 +51,7 @@ Widget soloUserMustResponseDialog(BuildContext context) {
                     shadowColor: Colors.blueAccent,
                     borderRadius: BorderRadius.circular(15.0),
                     child: TextFormField(
-                      controller: controllerText,
+                      controller: userMustResponseController,
                       obscureText: false,
                       autofocus: false,
                       decoration: InputDecoration(
@@ -84,6 +83,20 @@ Widget soloUserMustResponseDialog(BuildContext context) {
                   children: [
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        textStyle: const TextStyle(
+                          fontFamily: 'ModernSans',
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      child: const Text('Passa'),
+                      onPressed: () {
+                        Navigator.pop(context, "skipTurn");
+                      },
+                    ),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.blue,
                         textStyle: const TextStyle(
                           fontFamily: 'ModernSans',
@@ -93,8 +106,9 @@ Widget soloUserMustResponseDialog(BuildContext context) {
                       ),
                       child: const Text('Verifica'),
                       onPressed: () {
-                        if (controllerText.text.isNotEmpty) {
-                          Navigator.pop(context, controllerText.text);
+                        if (userMustResponseController.text.isNotEmpty) {
+                          Navigator.pop(context, userMustResponseController.text);
+                          userMustResponseController.text = "";
                         } else {
                           Flushbar(
                             flushbarPosition: FlushbarPosition.TOP,
@@ -120,20 +134,6 @@ Widget soloUserMustResponseDialog(BuildContext context) {
                         }
                       },
                     ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        textStyle: const TextStyle(
-                          fontFamily: 'ModernSans',
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      child: const Text('Passa'),
-                      onPressed: () {
-                        Navigator.pop(context, "skipTurn");
-                      },
-                    )
                   ],
                 )
               ]))));

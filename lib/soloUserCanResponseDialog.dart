@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 
-Widget soloUserCanResponseDialog(BuildContext context) {
-  TextEditingController controllerText = TextEditingController();
+Widget soloUserCanResponseDialog(BuildContext context, TextEditingController userCanResponseController) {
 
   return Padding(
       //obbligatorio se si vuole che la tastiera si alzi
@@ -34,7 +33,7 @@ Widget soloUserCanResponseDialog(BuildContext context) {
                 shadowColor: Colors.blueAccent,
                 borderRadius: BorderRadius.circular(15.0),
                 child: TextFormField(
-                  controller: controllerText,
+                  controller: userCanResponseController,
                   obscureText: false,
                   autofocus: false,
                   decoration: InputDecoration(
@@ -67,17 +66,32 @@ Widget soloUserCanResponseDialog(BuildContext context) {
               children: [
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.blue,
-                      textStyle: const TextStyle(
-                        fontFamily: 'ModernSans',
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
+                      backgroundColor: Colors.red,
+                    textStyle: const TextStyle(
+                      fontFamily: 'ModernSans',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Text('Passa'),
+                  onPressed: () {
+                    Navigator.pop(context, "skipTurn");
+                  },
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    textStyle: const TextStyle(
+                      fontFamily: 'ModernSans',
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   child: const Text('Verifica'),
                   onPressed: () {
-                    if (controllerText.text.isNotEmpty) {
-                      Navigator.pop(context, controllerText.text);
+                    if (userCanResponseController.text.isNotEmpty) {
+                      Navigator.pop(context, userCanResponseController.text);
+                      userCanResponseController.text = "";
                     } else {
                       Flushbar(
                         flushbarPosition: FlushbarPosition.TOP,
@@ -103,20 +117,6 @@ Widget soloUserCanResponseDialog(BuildContext context) {
                     }
                   },
                 ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                    textStyle: const TextStyle(
-                      fontFamily: 'ModernSans',
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  child: const Text('Passa'),
-                  onPressed: () {
-                    Navigator.pop(context, "skipTurn");
-                  },
-                )
               ],
             )
           ])));

@@ -3,13 +3,11 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:quindici_q/coopModeClass.dart';
 import 'package:quindici_q/soloModelClass.dart';
 import 'package:quindici_q/soloUserAndBotResponses.dart';
 import 'package:quindici_q/soloUserCanResponseDialog.dart';
 import 'package:quindici_q/soloUserMustResponseDialog.dart';
 import 'ButtonGeneratorSolo.dart';
-import 'constants.dart';
 import 'myAppBar.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -23,22 +21,26 @@ class SoloMode extends StatefulWidget {
 
 class _SoloModeState extends State<SoloMode> {
   Random random = Random();
-  late int botResponseIndex;
+  var ctime;
 
   List<SoloQuestion> questionsGetFromDb = [];
 
   late SoloQuestion currentQuestion; //elemento che viene visualizzato
+  late int currentClueIndex;
 
   late List<String> listOfClue; //lista di indizi in forma di stringa
-  late List<int> listOfClueIndex; //lista di indizi già presenti in forma di interi
+  late List<int>
+      listOfCluesUsed; //lista di indizi già presenti in forma di interi
+  late int botWinCounter;
 
   late List<String> userResponses = []; //risposte utente
-
-  PageController? controller;
 
   late Timer timer;
   int timeRemaining = 60;
   bool menuIsOpen = false;
+
+  late TextEditingController userCanResponseController;
+  late TextEditingController userMustResponseController;
 
   @override
   void initState() {
@@ -46,26 +48,31 @@ class _SoloModeState extends State<SoloMode> {
   }
 
   void createNewQuestion() {
-    botResponseIndex = 0;
-    int randomQuestion= random.nextInt(29) + 0; // from right to sum of them -1
+    currentClueIndex = 0;
+    int randomQuestion = random.nextInt(29) + 0; // from right to sum of them -1
     currentQuestion = questionsGetFromDb[randomQuestion];
     currentQuestion.risposteEsatte = currentQuestion.risposteEsatte
         .map((word) => word.toLowerCase())
         .toList();
     listOfClue = [];
-    listOfClueIndex = [];
+    listOfCluesUsed = [];
     userResponses = [];
+    userCanResponseController = TextEditingController();
+    userMustResponseController = TextEditingController();
+    botWinCounter = random.nextInt(5) + 8;
   }
 
   /// genera un nuovo indizio utilizzando un valore casuale compreso tra 0 e 20
   void addNewClue() {
-    int randomNumber = random.nextInt(20) + 0; // from right to sum of them -1
-    while (listOfClueIndex.contains(randomNumber)) { //finchè il numero random è giù uscito ne generi uno nuovo
-      randomNumber = random.nextInt(20) + 0;
+    int randomClue = random.nextInt(14) + 0; // from right to sum of them -1
+    while (listOfCluesUsed.contains(randomClue)) {
+      //finchè il numero random è giù uscito ne generi uno nuovo
+      randomClue = random.nextInt(14) + 0;
     }
-    listOfClueIndex.add(randomNumber);
-    listOfClue.add(currentQuestion.indizi[randomNumber]);
-    print("Indizi mostrati$listOfClueIndex");
+    listOfCluesUsed.add(randomClue);
+    listOfClue.add(currentQuestion.indizi[randomClue]);
+    currentClueIndex = randomClue;
+    startTimer(); //faccio partire il timer
   }
 
   @override
@@ -83,49 +90,62 @@ class _SoloModeState extends State<SoloMode> {
           extendBodyBehindAppBar: true,
           floatingActionButton: circleTimer(),
           appBar: const MyAppBarBack(),
-          body: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
-              future: FirebaseFirestore.instance
-                  .collection("questionSolo")
-                  .get(),
-              builder: (BuildContext context, querySnapshot) {
-                if (questionsGetFromDb.isNotEmpty) {
-                  return newPage(context);
-                } else {
-                  if (querySnapshot.hasError) {
-                    if (kDebugMode) {
-                      print("Something went wrong in fetch data from DB");
-                    }
-                  }
-
-                  if (querySnapshot.hasData) {
-                    //not enter db when refreshing
-                    if (kDebugMode) {
-                      print("Data fetched from DB");
-                    }
-                    questionsGetFromDb = querySnapshot.data!.docs
-                        .map(
-                          (doc) => SoloQuestion.fromMap(doc.data()),
-                        )
-                        .toList();
-
-                    createNewQuestion(); //scelgo una domanda casuala dal pool di domande ottenuto
-                    addNewClue(); //aggiungo un nuovo indizio da visualizzare
-                    startTimer(); //faccio partire il timer
-
-                    return newPage(context); //è una singola pagina
-                  }
-                  return AlertDialog(
-                    backgroundColor: Colors.transparent,
-                    content: Center(
-                      child: Image.asset(
-                        'assets/pacman.gif',
-                        // Put your gif into the assets folder
-                        width: 100,
-                      ),
-                    ),
-                  );
+          body: WillPopScope(
+              onWillPop: () {
+                DateTime now = DateTime.now();
+                if (ctime == null ||
+                    now.difference(ctime) > const Duration(seconds: 2)) {
+                  //add duration of press gap
+                  ctime = now;
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text(
+                          'Premi di nuovo per uscire, perderai la partita in corso'))); //scaffold message, you can show Toast message too.
+                  return Future.value(false);
                 }
-              }))
+                return Future.value(true);
+              },
+              child: FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  future: FirebaseFirestore.instance
+                      .collection("questionSolo")
+                      .get(),
+                  builder: (BuildContext context, querySnapshot) {
+                    if (questionsGetFromDb.isNotEmpty) {
+                      return newPage(context);
+                    } else {
+                      if (querySnapshot.hasError) {
+                        if (kDebugMode) {
+                          print("Something went wrong in fetch data from DB");
+                        }
+                      }
+
+                      if (querySnapshot.hasData) {
+                        //not enter db when refreshing
+                        if (kDebugMode) {
+                          print("Data fetched from DB");
+                        }
+                        questionsGetFromDb = querySnapshot.data!.docs
+                            .map(
+                              (doc) => SoloQuestion.fromMap(doc.data()),
+                            )
+                            .toList();
+
+                        createNewQuestion(); //scelgo una domanda casuala dal pool di domande ottenuto
+                        addNewClue(); //aggiungo un nuovo indizio da visualizzare
+
+                        return newPage(context); //è una singola pagina
+                      }
+                      return AlertDialog(
+                        backgroundColor: Colors.transparent,
+                        content: Center(
+                          child: Image.asset(
+                            'assets/pacman.gif',
+                            // Put your gif into the assets folder
+                            width: 100,
+                          ),
+                        ),
+                      );
+                    }
+                  })))
     ]);
   }
 
@@ -181,19 +201,21 @@ class _SoloModeState extends State<SoloMode> {
           color: Colors.cyan,
           child: InkWell(
             onTap: () {
+              menuIsOpen = true;
               showModalBottomSheet(
                 context: context,
                 isScrollControlled: true,
                 elevation: 10,
                 shape: const RoundedRectangleBorder(
                   borderRadius:
-                  BorderRadius.vertical(top: Radius.circular(25.0)),
+                      BorderRadius.vertical(top: Radius.circular(25.0)),
                 ),
                 clipBehavior: Clip.antiAliasWithSaveLayer,
                 builder: (BuildContext context) {
-                  return soloUserAndBotResponses(context, userResponses, botResponseIndex, currentQuestion.risposteBot);
+                  return soloUserAndBotResponses(context, userResponses,
+                      currentClueIndex, currentQuestion.risposteBot);
                 },
-              );
+              ).then((value) => {menuIsOpen = false});
             },
             child: const SizedBox(
               height: kToolbarHeight,
@@ -229,16 +251,19 @@ class _SoloModeState extends State<SoloMode> {
                     ),
                     clipBehavior: Clip.antiAliasWithSaveLayer,
                     builder: (BuildContext context) {
-                      return soloUserCanResponseDialog(context);
+                      return soloUserCanResponseDialog(
+                          context, userCanResponseController);
                     }).then((value) => {
                       if (value == null)
                         {
                           menuIsOpen = false
+
                           ///l'utente ha chiuso la finestra
                         }
                       else
                         {
                           checkResponse(value)
+
                           ///ha passato o risposto
                         }
                     });
@@ -330,14 +355,14 @@ class _SoloModeState extends State<SoloMode> {
           borderRadius: BorderRadius.circular(10.0),
         ),
         builder: (BuildContext context) {
-          return soloUserMustResponseDialog(context);
+          return soloUserMustResponseDialog(
+              context, userMustResponseController);
         }).then((value) => {
           if (value != null)
             {checkResponse(value)}
           else
-            {
-              checkResponse('skipTurn')
-        }});
+            {checkResponse('skipTurn')}
+        });
   }
 
   /// Se il BottomSheet è stato chiuso è paerchè l'utente può aver voluto visualizzare bene gli indizi
@@ -378,12 +403,11 @@ class _SoloModeState extends State<SoloMode> {
         color: Colors.black,
         fontWeight: FontWeight.w500,
       ),
-      desc: 'Allora sei un fuoriclasso',
+      desc: 'Allora sei un fuoriclasse',
       btnOkOnPress: () {
         setState(() {
           createNewQuestion();
-          addNewClue(); //aggiungo un nuovo indizio da visualizzare
-          startTimer(); //faccio partire il timer
+          addNewClue();
         });
       },
     ).show();
@@ -463,7 +487,7 @@ class _SoloModeState extends State<SoloMode> {
                     ),
                     // Some text
                     const Text(
-                      "Il BOT sta pensando...",
+                      "Mr.Q sta pensando...",
                       style: TextStyle(
                         fontFamily: 'ModernSans',
                         fontSize: 15,
@@ -484,33 +508,69 @@ class _SoloModeState extends State<SoloMode> {
   }
 
   botDialog() {
-    AwesomeDialog(
-      dismissOnTouchOutside: false,
-      dismissOnBackKeyPress: false,
-      context: context,
-      dialogType: DialogType.info,
-      animType: AnimType.rightSlide,
-      titleTextStyle: const TextStyle(
-        fontFamily: 'ModernSans',
-        fontSize: 25,
-        color: Colors.black,
-        fontWeight: FontWeight.bold,
-      ),
-      title: 'Il BOT dice ' + currentQuestion.risposteBot[botResponseIndex],
-      desc: 'Ma ha sbagliato, almeno hai escluso una parola',
-      descTextStyle: const TextStyle(
-        fontFamily: 'ModernSans',
-        fontSize: 18,
-        color: Colors.black,
-        fontWeight: FontWeight.w500,
-      ),
-      btnOkOnPress: () {
-        setState(() {
-          botResponseIndex += 1;
-          addNewClue();
-          startTimer();
-        });
-      },
-    ).show();
+    botWinCounter -= 1;
+    print("Il bot vince tra: ${botWinCounter} turni");
+    if (botWinCounter != 0) {
+      AwesomeDialog(
+        dismissOnTouchOutside: false,
+        dismissOnBackKeyPress: false,
+        context: context,
+        dialogType: DialogType.info,
+        animType: AnimType.rightSlide,
+        titleTextStyle: const TextStyle(
+          fontFamily: 'ModernSans',
+          fontSize: 25,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+        title: 'Mr.Q dice ' + currentQuestion.risposteBot[currentClueIndex],
+        desc: 'Ma ha sbagliato, almeno hai escluso una parola',
+        descTextStyle: const TextStyle(
+          fontFamily: 'ModernSans',
+          fontSize: 18,
+          color: Colors.black,
+          fontWeight: FontWeight.w500,
+        ),
+        btnOkOnPress: () {
+          setState(() {
+            addNewClue();
+          });
+        },
+      ).show();
+    } else {
+      AwesomeDialog(
+        dismissOnTouchOutside: false,
+        dismissOnBackKeyPress: false,
+        context: context,
+        dialogType: DialogType.warning,
+        animType: AnimType.rightSlide,
+        titleTextStyle: const TextStyle(
+          fontFamily: 'ModernSans',
+          fontSize: 25,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+        title: 'Mr.Q dice ' + currentQuestion.nome,
+        desc: "e ha indovinato. D'altro canto Mr.Q è abbastanza skillato",
+        descTextStyle: const TextStyle(
+          fontFamily: 'ModernSans',
+          fontSize: 18,
+          color: Colors.black,
+          fontWeight: FontWeight.w500,
+        ),
+        btnOkOnPress: () {
+          setState(() {
+            createNewQuestion();
+            addNewClue();
+          });
+        },
+      ).show();
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    timer.cancel();
   }
 }

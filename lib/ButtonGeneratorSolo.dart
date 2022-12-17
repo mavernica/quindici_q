@@ -17,7 +17,7 @@ class ButtonGeneratorSoloState extends State<ButtonGeneratorSolo> {
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.all(8),
-        height: 60,
+        height: 100,
         width: 400,
         decoration: BoxDecoration(
           color: Colors.white,

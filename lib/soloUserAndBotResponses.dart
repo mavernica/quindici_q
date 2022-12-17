@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:another_flushbar/flushbar.dart';
 
 Widget soloUserAndBotResponses(BuildContext context, List<String> userResponses,
-    int botResponseIndex, List risposteBot) {
+    int currentClueIndex, List risposteBot) {
   return  SizedBox(
           height: 300,
           child: Column(children: <Widget>[
@@ -31,7 +31,7 @@ Widget soloUserAndBotResponses(BuildContext context, List<String> userResponses,
                           ),
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
-                      itemCount: botResponseIndex, //se usi l'utente la lista può essere anche vuota
+                      itemCount: userResponses.length, //se usi l'utente la lista può essere anche vuota
                       itemBuilder: (BuildContext context, int index) {
                         return Column(children: <Widget>[
                           Text(
