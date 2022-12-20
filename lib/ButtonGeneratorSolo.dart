@@ -21,7 +21,10 @@ class ButtonGeneratorSoloState extends State<ButtonGeneratorSolo> {
         width: 400,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(15),
+          border: Border.all(color: Colors.black),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(15.0),
+          ),
         ),
         alignment: Alignment.center,
         child: Padding(

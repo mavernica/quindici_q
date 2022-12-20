@@ -12,6 +12,11 @@ import 'myAppBar.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
+import 'package:neon_circular_timer/neon_circular_timer.dart';
+import 'package:wave/wave.dart';
+import 'package:wave/config.dart';
+
+
 class SoloMode extends StatefulWidget {
   const SoloMode({super.key});
 
@@ -41,6 +46,26 @@ class _SoloModeState extends State<SoloMode> {
 
   late TextEditingController userCanResponseController;
   late TextEditingController userMustResponseController;
+  CountDownController timerController = CountDownController();
+
+
+
+  static const _backgroundColor = Colors.white;
+
+  static const _colors = [
+    Color(0xff061993),
+    Color(0xff0C3BAA),
+    Color(0xff135CC5),
+    Color(0xff1973D1),
+  ];
+
+  static const _durations = [
+    27000, 11000, 5000, 12000
+  ];
+
+  static const _heightPercentages = [
+    0.75, 0.76, 0.78, 0.80
+  ];
 
   @override
   void initState() {
@@ -78,11 +103,15 @@ class _SoloModeState extends State<SoloMode> {
   @override
   Widget build(BuildContext context) {
     return Stack(children: <Widget>[
-      Image.asset(
-        "assets/bg2.jpg",
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        fit: BoxFit.cover,
+      WaveWidget(
+        config: CustomConfig(
+          colors: _colors,
+          durations: _durations,
+          heightPercentages: _heightPercentages,
+        ),
+        backgroundColor: _backgroundColor,
+        size: Size(double.infinity, double.infinity),
+        waveAmplitude: 40,
       ),
       Scaffold(
           backgroundColor: Colors.transparent,
@@ -164,7 +193,7 @@ class _SoloModeState extends State<SoloMode> {
                   style: TextStyle(
                     fontFamily: 'ModernSans',
                     fontSize: 56,
-                    color: Colors.white,
+                    color: Colors.black,
                     fontWeight: FontWeight.w900,
                   ),
                   textAlign: TextAlign.left,
@@ -342,6 +371,32 @@ class _SoloModeState extends State<SoloMode> {
         )));
   }
 
+  Widget newTimer() {
+    return FittedBox(
+    child: FloatingActionButton(
+      backgroundColor: Colors.red,
+      onPressed: () {  },
+      child: NeonCircularTimer(
+      width: 100,
+      duration: 60,
+      controller : timerController,
+      isTimerTextShown: true,
+      neumorphicEffect: false,
+      innerFillGradient: const LinearGradient(colors: [
+        Colors.orange,
+        Colors.orangeAccent,
+        Colors.yellow
+      ]),
+        textStyle: const TextStyle(
+          fontFamily: 'ModernSans',
+          fontSize: 22,
+          color: Colors.black,
+          fontWeight: FontWeight.bold,
+        ),
+        textFormat: TextFormat.SS,
+    )));
+  }
+
   Future openMenuNotClosable() {
     return showModalBottomSheet(
         context: context,
@@ -406,8 +461,7 @@ class _SoloModeState extends State<SoloMode> {
       desc: 'Allora sei un fuoriclasse',
       btnOkOnPress: () {
         setState(() {
-          createNewQuestion();
-          addNewClue();
+          newTurn();
         });
       },
     ).show();
@@ -573,4 +627,18 @@ class _SoloModeState extends State<SoloMode> {
     super.dispose();
     timer.cancel();
   }
+
+  void newTurn() {
+    AlertDialog(
+        title: Text('Showing Lip'),
+    content: Container(
+    child: Image.asset(
+    'assets/sea.gif',
+    height: 125.0,
+    width: 125.0,
+    ),
+    ));
+  }
+
+
 }
