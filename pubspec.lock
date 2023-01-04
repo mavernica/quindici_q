@@ -7,7 +7,7 @@ packages:
       name: _flutterfire_internals
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.9"
+    version: "1.0.11"
   animated_text_kit:
     dependency: "direct dev"
     description:
@@ -56,7 +56,7 @@ packages:
       name: cached_network_image
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.2.2"
+    version: "3.2.3"
   cached_network_image_platform_interface:
     dependency: transitive
     description:
@@ -91,21 +91,21 @@ packages:
       name: cloud_firestore
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.0"
+    version: "4.3.0"
   cloud_firestore_platform_interface:
     dependency: transitive
     description:
       name: cloud_firestore_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.9.0"
+    version: "5.10.0"
   cloud_firestore_web:
     dependency: transitive
     description:
       name: cloud_firestore_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.2.0"
   collection:
     dependency: transitive
     description:
@@ -182,28 +182,28 @@ packages:
       name: firebase_auth
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.3"
+    version: "4.2.3"
   firebase_auth_platform_interface:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.11.3"
+    version: "6.11.6"
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.1.3"
+    version: "5.2.3"
   firebase_core:
     dependency: "direct main"
     description:
       name: firebase_core
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.3.0"
+    version: "2.4.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -217,49 +217,49 @@ packages:
       name: firebase_core_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.1"
+    version: "2.0.2"
   firebase_database:
     dependency: "direct dev"
     description:
       name: firebase_database
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "10.0.6"
+    version: "10.0.8"
   firebase_database_platform_interface:
     dependency: transitive
     description:
       name: firebase_database_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.2+14"
+    version: "0.2.2+16"
   firebase_database_web:
     dependency: transitive
     description:
       name: firebase_database_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.2.1+16"
+    version: "0.2.1+18"
   firebase_storage:
     dependency: "direct dev"
     description:
       name: firebase_storage
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "11.0.6"
+    version: "11.0.9"
   firebase_storage_platform_interface:
     dependency: transitive
     description:
       name: firebase_storage_platform_interface
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.1.24"
+    version: "4.1.25"
   firebase_storage_web:
     dependency: transitive
     description:
       name: firebase_storage_web
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.3.16"
+    version: "3.3.18"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -285,7 +285,7 @@ packages:
       name: flutter_custom_clippers
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.0"
+    version: "2.1.0"
   flutter_lints:
     dependency: "direct dev"
     description:
@@ -372,7 +372,7 @@ packages:
       name: introduction_screen
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   js:
     dependency: transitive
     description:
@@ -388,12 +388,12 @@ packages:
     source: hosted
     version: "2.0.1"
   lottie:
-    dependency: transitive
+    dependency: "direct dev"
     description:
       name: lottie
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.3"
+    version: "2.1.0"
   matcher:
     dependency: transitive
     description:
@@ -414,14 +414,7 @@ packages:
       name: material_design_icons_flutter
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.0.6996"
-  material_dialogs:
-    dependency: "direct dev"
-    description:
-      name: material_dialogs
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.1.3"
+    version: "6.0.7096"
   meta:
     dependency: transitive
     description:
@@ -463,7 +456,7 @@ packages:
       name: path_provider_android
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.0.21"
+    version: "2.0.22"
   path_provider_ios:
     dependency: transitive
     description:
@@ -580,7 +573,7 @@ packages:
       name: sqflite
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.2.0+3"
+    version: "2.2.2"
   sqflite_common:
     dependency: transitive
     description:
@@ -671,7 +664,7 @@ packages:
       name: win32
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "3.1.1"
+    version: "3.1.3"
   xdg_directories:
     dependency: transitive
     description:

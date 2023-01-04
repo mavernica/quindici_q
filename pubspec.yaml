@@ -53,7 +53,7 @@ dev_dependencies:
   firebase_auth: ^4.1.2
   firebase_storage: ^11.0.5
   cached_network_image: ^3.2.2
-  material_design_icons_flutter: ^5.0.6996
+  material_design_icons_flutter: ^6.0.7096
   flutter_custom_clippers: ^2.0.0
   animated_text_kit: ^4.2.2
   infinite_scroll_pagination: ^3.2.0
@@ -67,8 +67,9 @@ dev_dependencies:
   another_flushbar: ^1.12.29
   double_back_to_close: ^2.0.0
   flutter_staggered_animations: ^1.0.0
-  material_dialogs: ^1.1.3
   neon_circular_timer: ^0.0.7
+  lottie: ^2.1.0
+
 
 
 # For information on the generic Dart part of this file, see the
@@ -82,18 +83,12 @@ flutter:
   # the material icons class.
   uses-material-design: true
   assets:
-    - assets/prova.json
     - assets/planets/
     - assets/animals/
     - assets/category/
-    - assets/bg.jpg
-    - assets/mosaico.png
-    - assets/Standard.jpg
-    - assets/header.jpg
-    - assets/bulbasaur.jpg
-    - assets/ch.png
     - assets/
     - assets/icons/
+    - assets/waves/
   fonts:
     - family: ModernSans
       fonts:

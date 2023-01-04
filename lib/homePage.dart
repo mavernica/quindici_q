@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:quindici_q/styleguide.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
-import 'categoryPage.dart';
+import 'secondPage.dart';
 import 'homePageBackground.dart';
 import 'myAppBar.dart';
 import 'myDrawer.dart';
@@ -32,14 +32,14 @@ class HomePageState extends State<HomePage> {
               children: <Widget>[
                 const Center(
                     child: Text(
-                  "18Questions",
+                  "15Q",
                   style: applicationNameTextStyle,
                   textAlign: TextAlign.center,
                 )),
                 const Center(
                   //distanza orizzontale degli ogetti sotto
                   child: Text(
-                    'scopri chi minchia sono',
+                    'indovina chi sono',
                     style: applicationSubNameTextStyle,
                     textAlign: TextAlign.center,
                   ),
@@ -62,8 +62,8 @@ class HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             PageRouteBuilder(
-                              pageBuilder: (context, a, b) => CategoryPage(
-                                cardInfo: modeList[index],
+                              pageBuilder: (context, a, b) => SecondPage(
+                                singleCard: modeList[index],
                                 key: null,
                               ),
                             ),
@@ -91,12 +91,12 @@ class HomePageState extends State<HomePage> {
                                         const SizedBox(
                                             height: 60), //altezza Card
                                         Text(
-                                          modeList[index].name,
+                                          modeList[index].title,
                                           style: categoriesTitleTextStyle,
                                           textAlign: TextAlign.left,
                                         ),
                                         Text(
-                                          modeList[index].subName,
+                                          modeList[index].subTitle,
                                           style: categorySubTitleStyle,
                                           textAlign: TextAlign.left,
                                         ),
@@ -108,7 +108,7 @@ class HomePageState extends State<HomePage> {
                               ],
                             ),
                             Hero(
-                              tag: modeList[index].position,
+                              tag: modeList[index].title.toString(),
                               child: Image.asset(
                                 modeList[index].iconImage,
                                 height: 210,

@@ -32,7 +32,7 @@ class CoopMenuPage extends StatelessWidget {
                   children: <Widget>[
                     const SizedBox(height: 260),
                     Text(
-                      planetInfo.name,
+                      planetInfo.title,
                       style: categoryTitleStyle,
                       textAlign: TextAlign.left,
                     ),
@@ -99,7 +99,7 @@ class CoopMenuPage extends StatelessWidget {
                                 )))
                         )),
                     Text(
-                      planetInfo.name,
+                      planetInfo.title,
                       style: TextStyle(
                         fontFamily: 'Avenir',
                         fontSize: 56,

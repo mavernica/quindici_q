@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quindici_q/modeClass.dart';
 import 'package:quindici_q/operationOnDbCoop.dart';
 import 'package:quindici_q/operationOnDbSolo.dart';
-import 'package:quindici_q/soloMenuPage.dart';
+import 'package:quindici_q/soloCharacterPage.dart';
 import 'package:quindici_q/coopMenuPage.dart';
 import 'homePage.dart';
 import 'instructionCoopPage.dart';
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
                 '/': (context) => const HomePage(),
                 // When navigating to the "/second" route, build the SecondScreen widget.
                 '/standard': (context) => CoopMenuPage(planetInfo: modeList[0]),
-                '/solo': (context) => SoloMenuPage(planetInfo: modeList[1]),
+                '/solo': (context) => SoloCharacterPage(cardInfo: modeList[1]),
                 '/instructionSolo': (context) => InstructionSoloPage(),
                 '/instructionCoop': (context) => InstructionCoopPage(),
 
