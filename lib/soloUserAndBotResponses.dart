@@ -3,8 +3,12 @@ import 'package:another_flushbar/flushbar.dart';
 
 Widget soloUserAndBotResponses(BuildContext context, List<String> userResponses,
     int currentClueIndex, List risposteBot) {
+
+  final screenHeight = MediaQuery.of(context).size.height;
+
+
   return  SizedBox(
-          height: 300,
+          height: screenHeight * 0.4,
           child: Column(children: <Widget>[
             const SizedBox(height: 10),
             const Text(

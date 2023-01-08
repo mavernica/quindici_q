@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:quindici_q/modeClass.dart';
-import 'package:quindici_q/operationOnDbCoop.dart';
-import 'package:quindici_q/operationOnDbSolo.dart';
 import 'package:quindici_q/soloCharacterPage.dart';
 import 'package:quindici_q/coopMenuPage.dart';
 import 'homePage.dart';
@@ -10,7 +9,9 @@ import 'instructionCoopPage.dart';
 import 'instructionSoloPage.dart';
 
 void main() {
-  runApp(const MyApp());
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((_) =>  runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -40,8 +41,8 @@ class MyApp extends StatelessWidget {
                 // When navigating to the "/" route, build the FirstScreen widget.
                 '/': (context) => const HomePage(),
                 // When navigating to the "/second" route, build the SecondScreen widget.
-                '/standard': (context) => CoopMenuPage(planetInfo: modeList[0]),
-                '/solo': (context) => SoloCharacterPage(cardInfo: modeList[1]),
+                '/solo': (context) => SoloCharacterPage(cardInfo: modeList[0]),
+                '/standard': (context) => CoopMenuPage(planetInfo: modeList[1]),
                 '/instructionSolo': (context) => InstructionSoloPage(),
                 '/instructionCoop': (context) => InstructionCoopPage(),
 

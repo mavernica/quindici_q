@@ -4,12 +4,14 @@ import 'package:another_flushbar/flushbar.dart';
 
 Widget soloUserCanResponseDialog(BuildContext context, TextEditingController userCanResponseController) {
 
+  final screenHeight = MediaQuery.of(context).size.height;
+
   return Padding(
       //obbligatorio se si vuole che la tastiera si alzi
       padding:
           EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: SizedBox(
-          height: 220,
+          height: screenHeight * 0.25,
           child: Column(children: <Widget>[
             const SizedBox(height: 10),
             const Padding(padding: EdgeInsets.all(8),

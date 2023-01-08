@@ -27,19 +27,20 @@ class SecondPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  const SizedBox(height: 270),
+                  const SizedBox(height: 300),
                   Text(
                     singleCard.title,
                     style: categoryTitleStyle,
                     textAlign: TextAlign.left,
                   ),
+                  const SizedBox(height: 8),
                   Text(
-                    singleCard.subTitle,
+                    singleCard.subTitle.replaceAll("\n", " "),
                     style: categorySubTitleStyle,
                     textAlign: TextAlign.left,
                   ),
-                  const SizedBox(height: 10),
-                  Text(singleCard.description ?? '', style: categoryDescriptionTitleStyle),
+                  const SizedBox(height: 8),
+                  Text(singleCard.description, textAlign: TextAlign.left, style: categoryDescriptionTitleStyle),
                   const SizedBox(height: 5),
                   GestureDetector(
                     onTap: () {
@@ -52,7 +53,7 @@ class SecondPage extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                         side: const BorderSide(
-                          color: Color(0xff122c45),
+                          color: spButtonBgColor,
                           width: 6,
                         ),
                       ),
@@ -65,7 +66,7 @@ class SecondPage extends StatelessWidget {
                               borderRadius: BorderRadius.circular(15.0),
                               child: FittedBox(
                                 fit: BoxFit.cover,
-                                child: Lottie.asset('assets/rightUpWave.json',
+                                child: Lottie.asset('assets/waves/rightUpWave.json',
                                     fit: BoxFit.cover),
                               ),
                             ),
@@ -77,14 +78,12 @@ class SecondPage extends StatelessWidget {
                               child: AnimatedTextKit(
                                   animatedTexts: [
                                     TypewriterAnimatedText(
-                                        'Pronto a cominciare?'),
-                                    TypewriterAnimatedText("Sarai all'altezza?",
-                                        cursor: '|'),
+                                        'Pronto?'),
                                     TypewriterAnimatedText('Iniziamo...',
                                         cursor: '|'),
                                   ],
                                   isRepeatingAnimation: true,
-                                  totalRepeatCount: 2,
+                                  totalRepeatCount: 1,
                                   onTap: () {
                                     Navigator.pushNamed(context, singleCard.page);
                                   }),
@@ -101,27 +100,29 @@ class SecondPage extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(context, singleCard.instruction);
                 },
-                child: Card(
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Card(
                     margin: const EdgeInsets.symmetric(vertical: 10),
                     elevation: 10,
                     color: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15),
                       side: const BorderSide(
-                        color: Color(0xff122c45),
+                        color: spButtonBgColor,
                         width: 6,
                       ),
                     ),
                     child: SizedBox(
-                      width: screenWidth,
-                      height: 100,
+                      width: screenWidth * 0.8,
+                      height: 80,
                       child: Stack(children: <Widget>[
                         SizedBox.expand(
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(15.0),
                             child: FittedBox(
                               fit: BoxFit.cover,
-                              child: Lottie.asset('assets/leftDownWave.json',
+                              child: Lottie.asset('assets/waves/leftDownWave.json',
                                   fit: BoxFit.cover),
                             ),
                           ),
@@ -148,6 +149,7 @@ class SecondPage extends StatelessWidget {
                     ),
                   ),
               ),
+              ),
                 ],
               ),
             ),
@@ -162,10 +164,10 @@ class SecondPage extends StatelessWidget {
               left: 32,
               child: Text(
                 singleCard.position.toString(),
-                style: TextStyle(
+                style: const TextStyle(
                   fontFamily: 'Avenir',
                   fontSize: 247,
-                  color: const Color(0xFF414C6B).withOpacity(0.3),
+                  color: Colors.black12,
                   fontWeight: FontWeight.w900,
                 ),
                 textAlign: TextAlign.left,

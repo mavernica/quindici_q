@@ -27,23 +27,9 @@ class Mode {
 
 List<Mode> modeList = [
   Mode(
-   1,
-    title: 'Cooperativa',
-    subTitle: 'Gioco di squadra',
-    description:
-        "Zipping around the sun in only 88 days, Mercury is the closest planets to the sun, and it's also the smallest, only a little bit larger than Earth's moon. Because its so close to the sun (about two-fifths the distance between Earth and the sun), Mercury experiences dramatic changes in its day and night temperatures: Day temperatures can reach a scorching 840  F (450 C), which is hot enough to melt lead. Meanwhile on the night side, temperatures drop to minus 290 F (minus 180 C).",
-    iconImage: 'assets/planets/mercury.png',
-    page: '/standard',
-    instruction: '/instructionSolo',
-    insideTitle: "Personaggi",
-    insideSubTitle: "Scegli la tua nemesi",
-    insideDescription:
-        "Zipping around the sun in only 88 days, Mercury is the closest planets to the sun, and it's also the smallest, only a little bit larger than Earth's moon. Because its so close to the sun (about two-fifths the distance between Earth and the sun), Mercury experiences dramatic changes in its day and night temperatures: Day temperatures can reach a scorching 840  F (450 C), which is hot enough to melt lead. Meanwhile on the night side, temperatures drop to minus 290 F (minus 180 C).",
-  ),
-  Mode(
-     2,
+     1,
       title: 'Solitaria',
-      subTitle: 'Single player',
+      subTitle: 'Single\nplayer',
       description:
           "In questa modalità potrai giocare con il computer e cercare di batterlo. Avrai la possibilità di scontrarti contro vari avversarsi celebri"
           "ma attenzione che alcuni di loro si riveleranno più ostici del previsto da battere.",
@@ -54,6 +40,20 @@ List<Mode> modeList = [
       insideSubTitle: "Scegli la tua nemesi",
       insideDescription:
           "Scegli il giocatore contro cui ti scontrerai. Attenzione che la difficioltà aumenterà a secondo del personaggio."),
+  Mode(
+    2,
+    title: 'Cooperativa',
+    subTitle: 'Gioco di\nsquadra',
+    description:
+    "Zipping around the sun in only 88 days, Mercury is the closest planets to the sun, and it's also the smallest, only a little bit larger than Earth's moon. Because its so close to the sun (about two-fifths the distance between Earth and the sun), Mercury experiences dramatic changes in its day and night temperatures: Day temperatures can reach a scorching 840  F (450 C), which is hot enough to melt lead. Meanwhile on the night side, temperatures drop to minus 290 F (minus 180 C).",
+    iconImage: 'assets/planets/mercury.png',
+    page: '/standard',
+    instruction: '/instructionSolo',
+    insideTitle: "Personaggi",
+    insideSubTitle: "Scegli la tua nemesi",
+    insideDescription:
+    "Zipping around the sun in only 88 days, Mercury is the closest planets to the sun, and it's also the smallest, only a little bit larger than Earth's moon. Because its so close to the sun (about two-fifths the distance between Earth and the sun), Mercury experiences dramatic changes in its day and night temperatures: Day temperatures can reach a scorching 840  F (450 C), which is hot enough to melt lead. Meanwhile on the night side, temperatures drop to minus 290 F (minus 180 C).",
+  ),
 
   Mode(3,
       title: 'Earth',

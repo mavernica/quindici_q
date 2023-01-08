@@ -8,17 +8,22 @@ class HomePageBackground extends StatelessWidget {
   Widget build(BuildContext context) {
 
     final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidht = MediaQuery.of(context).size.width;
 
-    return ClipPath(
-      clipper: WaveClipperOne(),
-      child: Container(
+    return SizedBox(
         height: screenHeight * 0.4,
-        decoration: const BoxDecoration (
-            image: DecorationImage(
-              image: AssetImage("assets/mosaico.png"), //Simplified Pixabay License
+        width: screenWidht,
+        child: Stack(
+        children: [
+          Image.asset(
+              'assets/prova2.png',
               fit: BoxFit.fill
-            )
-        ),
+            ),
+          Image.asset(
+              'assets/prova1.png',
+              fit: BoxFit.fill
+          ),
+        ]
       ),
     );
   }

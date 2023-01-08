@@ -16,7 +16,6 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,95 +44,98 @@ class HomePageState extends State<HomePage> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.only(left: 18, top: 5),
-                  height: 400, //dimensione del container che ospita le card
+                  margin: const EdgeInsets.only(left: 20, top: 5),
+                  height: 350, //dimensione del container che ospita le card
                   child: Swiper(
+                    physics: NeverScrollableScrollPhysics(),
+                    viewportFraction: 0.10,
+                    scale: 0.9,
+                    loop: true,
                     scrollDirection: Axis.horizontal,
                     itemCount: modeList.length,
-                    itemWidth: MediaQuery.of(context).size.width - 4 * 24,
+                    itemWidth: MediaQuery.of(context).size.width - 4 * 25,
                     layout: SwiperLayout.STACK,
-                    pagination: const SwiperPagination(
-                      builder: DotSwiperPaginationBuilder(
-                          activeSize: 10, space: 8), //puntini
-                    ),
+                    pagination: null,
                     itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder: (context, a, b) => SecondPage(
-                                singleCard: modeList[index],
-                                key: null,
+                        return InkWell(
+                          splashColor: Colors.transparent,
+                          highlightColor: Colors.transparent,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder: (context, a, b) => SecondPage(
+                                  singleCard: modeList[index],
+                                  key: null,
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        child: Stack(
-                          children: <Widget>[
-                            ListView(
-                              children: <Widget>[
-                                const SizedBox(
-                                    height:
-                                        70), //spazia le carte dalla dall'inizio del container
-                                Card(
-                                  elevation: 10, //ombra
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(40),
-                                  ),
-                                  color: Colors.white,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(32.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        const SizedBox(
-                                            height: 60), //altezza Card
-                                        Text(
-                                          modeList[index].title,
-                                          style: categoriesTitleTextStyle,
-                                          textAlign: TextAlign.left,
-                                        ),
-                                        Text(
-                                          modeList[index].subTitle,
-                                          style: categorySubTitleStyle,
-                                          textAlign: TextAlign.left,
-                                        ),
-                                        const SizedBox(height: 32),
-                                      ],
+                            );
+                          },
+                          child: Stack(
+                            children: <Widget>[
+                              ListView(
+                                children: <Widget>[
+                                  const SizedBox(
+                                      height:
+                                          80), //spazia le carte dalla dall'inizio del container
+                                  Card(
+                                    elevation: 5, //ombra
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(40),
+                                    ),
+                                    color: Colors.white,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(32.0),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          const SizedBox(
+                                              height: 50), //altezza Card
+                                          Text(
+                                            modeList[index].title,
+                                            style: categoriesTitleTextStyle,
+                                            textAlign: TextAlign.left,
+                                          ),
+                                          const SizedBox(height: 2,),
+                                          Text(
+                                            modeList[index].subTitle,
+                                            style: categorySubTitleStyle,
+                                            textAlign: TextAlign.left,
+                                          ),
+                                          const SizedBox(height: 32),
+                                        ],
+                                      ),
                                     ),
                                   ),
+                                ],
+                              ),
+                              Hero(
+                                tag: modeList[index].title.toString(),
+                                child: Image.asset(
+                                  modeList[index].iconImage,
+                                  height: 210,
+                                  width: 250,
                                 ),
-                              ],
-                            ),
-                            Hero(
-                              tag: modeList[index].title.toString(),
-                              child: Image.asset(
-                                modeList[index].iconImage,
-                                height: 210,
-                                width: 250,
                               ),
-                            ),
-                            Positioned(
-                              right: 30,
-                              bottom: 50,
-                              child: Text(
-                                modeList[index].position.toString(),
-                                style: bigNumberTextStyle,
-                                textAlign: TextAlign.left,
+                              Positioned(
+                                right: 30,
+                                bottom: 5,
+                                child: Text(
+                                  modeList[index].position.toString(),
+                                  style: bigNumberTextStyle,
+                                  textAlign: TextAlign.left,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      );
+                            ],
+                          ),
+                        );
                     },
                   ),
                 ),
               ],
             ),
-          )
-          )
+          ))
         ]));
   }
 }
